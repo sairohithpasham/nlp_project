@@ -2,7 +2,7 @@ Official repository for the paper [NER4ID at SemEval-2022 Task 2: Named Entity R
 
 --------------------------------------------------------------------------------
 
-**Please consider citing our work if you use data and/or code from this repository.**
+Citation:
 
 #### Bibtex
 ```bibtex
@@ -23,8 +23,11 @@ Official repository for the paper [NER4ID at SemEval-2022 Task 2: Named Entity R
 ```
 <br>
 
-# System Overview 
-In a nutshell, NER4ID is a high-performing idiom identification system that: i) uses Named Entity Recognition (NER) to pre-identify non-idiomatic expressions, and ii) exploits a novel Transformer-based dual-encoder architecture to compute the semantic similarities between the remaining potentially-idiomatic expressions and their contexts and, based on these, predict idiomaticity.
+# The NER4ID model
+NER, or Named Entity Recognition, is a natural language processing task that involves identifying and categorizing named entities in text. These entities can include person names, organization names, locations, dates, and more. The purpose of NER is to extract structured information from unstructured text data.
+The NER module serves as an auxiliary component in the idiomaticity detection pipeline. It helps manage ambiguous cases by pre-identifying non-idiomatic expressions that are part of named entities. These expressions, although they may appear in the text, may be unrelated to the context in which they are used. By identifying these expressions, the NER module prevents errors in the idiomaticity detection process.
+It takes a raw text sequence containing a potentially idiomatic expression and predicts all the entities present in the sequence. It accomplishes this by assigning predefined semantic types (e.g., Person, Location, Organization) to specific words, thus identifying them as belonging to those types.
+Overall, NER is a valuable tool for extracting structured information from unstructured text data. It enhances the accuracy of the idiomaticity detection system by effectively managing ambiguous cases.
 
 # Data
 The datasets used to train and evaluate our NER4ID system are those provided by [SemEval-2022 Task 2](https://sites.google.com/view/semeval2022task2-idiomaticity) organizers. Each entry contains a multi-word expression (MWE) in context, and the aim of the system is to determine whether such MWE is used with a literal or idiomatic meaning in that context. Datasets are provided for three different languages: English, Portuguese and Galician.
@@ -32,18 +35,20 @@ The datasets used to train and evaluate our NER4ID system are those provided by 
 Additionally, two different settings are available: zero-shot and one-shot.
 In the "zero-shot" setting, MWEs (potentially idiomatic phrases) in the training set are completely disjoint from those in the test and development sets. In the "one-shot" setting, they included one positive and one negative training example for each MWE in the test and development sets.
 
-The datasets are available in the [/data](./data) folder.
+The datasets which we used are available in the github repository
 
 <br>
 
 # Implementation
 We implemented our idiom identification system with [PyTorch](https://pytorch.org/) using the [Transformers library](https://huggingface.co/docs/transformers/index) to load the weights of a BERT-based model.
-
-
 To identify entities, instead, we employed [wikineural-multilingual-ner](https://huggingface.co/Babelscape/wikineural-multilingual-ner), a Multilingual BERT (mBERT) model fine-tuned on the [WikiNEuRal](https://github.com/babelscape/wikineural) dataset. We compare systems by means of their Macro F1 scores, as specified by the competition rules.
 
-We provide a **[Python Notebook](./code/NER4ID.ipynb)** that illustrates all the modules that characterize the NER4ID system.
-For ease of use, we simplify the notebook in the following points:
-- Instead of using *BERT-base-cased* for English and of *BERT-base-portuguese-cased* for Portuguese and Galician, we use a single BERT-base-multilingual-cased model;
-- Rather than ensembling the predictions of 9 model checkpoints, we consider the predictions only of the best model;
-- To identify entities, we use rely on commonly-used SpaCy NER tagger.
+We have prepared a Python Notebook that demonstrates the key modules of the NER4ID system. To make it more user-friendly, we have simplified the notebook with the following modifications:
+
+Unified Multilingual BERT Model: Instead of utilizing separate BERT models like BERT-base-cased for English and BERT-base-portuguese-cased for Portuguese and Galician, we employ a single BERT model known as BERT-base-multilingual-cased. This model can handle multiple languages, allowing for a streamlined approach.
+
+Single Best Model Predictions: Instead of ensembling the predictions from 9 different model checkpoints, we focus solely on the predictions of the best-performing model. This simplifies the process and eliminates the need for combining multiple model outputs.
+
+SpaCy NER Tagger: To identify entities, we utilize the widely-used SpaCy NER tagger. This tagger is known for its effectiveness in recognizing named entities in text, ensuring accurate entity identification within the NER4ID system.
+
+By implementing these simplifications, we aim to provide a more accessible and straightforward demonstration of the NER4ID system. Please refer to the Python Notebook for a detailed walkthrough and practical examples.
